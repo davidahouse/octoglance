@@ -1,13 +1,13 @@
 {
-  "name": "og",
-  "main": "bin/og.js",
+  "name": "octoglance",
+  "main": "bin/octoglance.js",
   "version": "0.1.0",
   "description": "A command line app for interacting with github",
   "license": "MIT",
-  "repository": "davidahouse/og",
+  "repository": "davidahouse/octoglance",
   "preferGlobal": true,
   "bin": {
-    "og": "bin/og.js"
+    "octoglance": "bin/octoglance.js"
   },
   "dependencies": {
     "@octokit/app": "^4.1.0",

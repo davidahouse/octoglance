@@ -10,7 +10,7 @@ const organizations = require("../commands/organizations");
 const repositories = require("../commands/repositories");
 
 require("pkginfo")(module);
-const conf = require("rc")("og", {
+const conf = require("rc")("octoglance", {
   // defaults
   githubAPIKey: null,
   gheAPIKey: null,
@@ -18,8 +18,8 @@ const conf = require("rc")("og", {
 });
 
 settings.init({
-  appName: "og", //required,
-  reverseDNS: "com.davidahouse.og" //required for macOS
+  appName: "octoglance", //required,
+  reverseDNS: "com.davidahouse.octoglance" //required for macOS
 });
 
 let octokit = null;
@@ -45,7 +45,7 @@ if (settings.value("github", "public") === "public") {
 }
 
 console.log(
-  chalk.yellow(figlet.textSync("OctoGlance", { horizontalLayout: "full" }))
+  chalk.yellow(figlet.textSync("octoglance", { horizontalLayout: "full" }))
 );
 console.log(chalk.yellow(module.exports.version));
 
@@ -117,5 +117,5 @@ vorpal
     callback();
   });
 
-vorpal.history("og");
-vorpal.delimiter("og>").show();
+vorpal.history("octoglance");
+vorpal.delimiter("octoglance>").show();
