@@ -1,0 +1,44 @@
+{
+  "name": "og",
+  "main": "bin/og.js",
+  "version": "0.1.0",
+  "description": "A command line app for interacting with github",
+  "license": "MIT",
+  "repository": "davidahouse/og",
+  "preferGlobal": true,
+  "bin": {
+    "og": "bin/og.js"
+  },
+  "dependencies": {
+    "@octokit/app": "^4.1.0",
+    "@octokit/request": "^5.0.2",
+    "@octokit/rest": "^16.28.8",
+    "bull": "^3.10.0",
+    "chalk": "^2.4.2",
+    "clear": "^0.1.0",
+    "commander": "^2.19.0",
+    "dateformat": "^3.0.3",
+    "eslint-config-prettier": "^6.4.0",
+    "expand-template": "^2.0.3",
+    "figlet": "^1.2.1",
+    "js-yaml": "^3.13.1",
+    "lynn-request": "^0.4.5",
+    "ora": "^3.2.0",
+    "pkginfo": "^0.4.1",
+    "rc": "^1.2.8",
+    "settings-store": "^1.4.1",
+    "vorpal": "^1.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0",
+    "chai": "^4.2.0",
+    "eslint-config-prettier": "^6.4.0",
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "lint": "eslint $(find . -name \"*.js\" -not -path \"./node_modules/*\" -not -path \"./public/*\")",
+    "lint-fix": "eslint --fix $(find . -name \"*.js\" -not -path \"./node_modules/*\" -not -path \"./public/*\")",
+    "test": "mocha"
+  }
+}
