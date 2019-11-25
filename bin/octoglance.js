@@ -8,6 +8,7 @@ const settings = require("settings-store");
 // General commands
 const organizations = require("../commands/organizations");
 const repositories = require("../commands/repositories");
+const unreleased = require("../commands/unreleased");
 
 require("pkginfo")(module);
 const conf = require("rc")("octoglance", {
@@ -115,6 +116,16 @@ vorpal
         settings.value("currentRepo", "none")
     );
     callback();
+  });
+
+// Milestones
+vorpal
+  .command(
+    "unreleased",
+    "List the github repositories that have unreleased milestones"
+  )
+  .action(function(args, callback) {
+    unreleased.handle(settings.value("currentOrg", "user"), octokit, callback);
   });
 
 vorpal.history("octoglance");
