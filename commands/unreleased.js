@@ -36,6 +36,22 @@ async function handle(org, octokit, callback) {
                   " pr(s) ready to release"
               )
             );
+            const issues = await octokit.issues.listForRepo({
+              owner: response.data[index].owner.login,
+              repo: response.data[index].name,
+              milestone: milestones.data[mindex].number,
+              state: "closed"
+            });
+            for (let iindex = 0; iindex < issues.data.length; iindex++) {
+              console.log(
+                chalk.yellow(
+                  "  - [" +
+                    issues.data[iindex].number +
+                    "] " +
+                    issues.data[iindex].title
+                )
+              );
+            }
           }
         }
       }
@@ -67,6 +83,22 @@ async function handle(org, octokit, callback) {
                   " pr(s) ready to release"
               )
             );
+            const issues = await octokit.issues.listForRepo({
+              owner: org,
+              repo: repos.data[index].name,
+              milestone: milestones.data[mindex].number,
+              state: "closed"
+            });
+            for (let iindex = 0; iindex < issues.data.length; iindex++) {
+              console.log(
+                chalk.yellow(
+                  "  - [" +
+                    issues.data[iindex].number +
+                    "] " +
+                    issues.data[iindex].title
+                )
+              );
+            }
           }
         }
       }
