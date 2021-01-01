@@ -9,18 +9,19 @@ const settings = require("settings-store");
 const organizations = require("../commands/organizations");
 const repositories = require("../commands/repositories");
 const unreleased = require("../commands/unreleased");
+const stats = require("../commands/stats");
 
 require("pkginfo")(module);
 const conf = require("rc")("octoglance", {
   // defaults
   githubAPIKey: null,
   gheAPIKey: null,
-  gheHost: null
+  gheHost: null,
 });
 
 settings.init({
   appName: "octoglance", //required,
-  reverseDNS: "com.davidahouse.octoglance" //required for macOS
+  reverseDNS: "com.davidahouse.octoglance", //required for macOS
 });
 
 let octokit = null;
@@ -31,8 +32,8 @@ if (settings.value("github", "public") === "public") {
     userAgent: "octokit/rest.js v1.2.3",
     log: {
       warn: console.warn,
-      error: console.error
-    }
+      error: console.error,
+    },
   });
 } else {
   octokit = new Octokit({
@@ -40,8 +41,8 @@ if (settings.value("github", "public") === "public") {
     userAgent: "octokit/rest.js v1.2.3",
     log: {
       warn: console.warn,
-      error: console.error
-    }
+      error: console.error,
+    },
   });
 }
 
@@ -53,7 +54,7 @@ console.log(chalk.yellow(module.exports.version));
 // General
 vorpal
   .command("set", "List the current settings")
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     vorpal.log("Current Organization: " + settings.value("currentOrg", "user"));
     vorpal.log("Current Repository: " + settings.value("currentRepo", "none"));
     callback();
@@ -63,17 +64,17 @@ vorpal
 
 vorpal
   .command("orgs", "List the github orgs you are a member of")
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     organizations.handle(octokit, callback);
   });
 vorpal
   .command("organizations", "List the github organizations you are a member of")
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     organizations.handle(octokit, callback);
   });
 vorpal
   .command("org [name]", "List the github orgs you are a member of")
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     settings.setValue("currentOrg", args.name);
     settings.setValue("currentRepo", null);
     vorpal.log(
@@ -88,7 +89,7 @@ vorpal
 
 vorpal
   .command("repos", "List the github repos in the current organization")
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     repositories.handle(
       settings.value("currentOrg", "user"),
       octokit,
@@ -100,7 +101,7 @@ vorpal
     "repositories",
     "List the github repositories in the current organization"
   )
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     repositories.handle(
       settings.value("currentOrg", "user"),
       octokit,
@@ -109,7 +110,7 @@ vorpal
   });
 vorpal
   .command("repo [name]", "List the github orgs you are a member of")
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     settings.setValue("currentRepo", args.name);
     vorpal.log(
       "Current repository has been set to: " +
@@ -124,8 +125,19 @@ vorpal
     "unreleased",
     "List the github repositories that have unreleased milestones"
   )
-  .action(function(args, callback) {
+  .action(function (args, callback) {
     unreleased.handle(settings.value("currentOrg", "user"), octokit, callback);
+  });
+
+vorpal
+  .command("stats [scope]", "List some stats from the current github org")
+  .action(function (args, callback) {
+    stats.handle(
+      settings.value("currentOrg", "user"),
+      args.scope,
+      octokit,
+      callback
+    );
   });
 
 vorpal.history("octoglance");
