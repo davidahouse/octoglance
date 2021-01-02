@@ -9,6 +9,7 @@ const settings = require("settings-store");
 const organizations = require("../commands/organizations");
 const repositories = require("../commands/repositories");
 const unreleased = require("../commands/unreleased");
+const released = require("../commands/released");
 const stats = require("../commands/stats");
 
 require("pkginfo")(module);
@@ -127,6 +128,17 @@ vorpal
   )
   .action(function (args, callback) {
     unreleased.handle(settings.value("currentOrg", "user"), octokit, callback);
+  });
+
+vorpal
+  .command("released [scope]", "List the github releases")
+  .action(function (args, callback) {
+    released.handle(
+      settings.value("currentOrg", "user"),
+      args.scope,
+      octokit,
+      callback
+    );
   });
 
 vorpal
