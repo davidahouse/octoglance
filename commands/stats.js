@@ -94,7 +94,9 @@ async function countReleases(org, repo, scope, octokit) {
         ) == true ||
         (scope === "week" &&
           moment(new Date()).week() ==
-            moment(Date.parse(response.data[index].created_at)).week()) ||
+            moment(Date.parse(response.data[index].created_at)).week() &&
+          moment(new Date()).year() ==
+            moment(Date.parse(response.data[index].created_at)).year()) ||
         (scope === "lastYear" &&
           moment(new Date())
             .subtract(1, "year")
@@ -128,7 +130,9 @@ async function countPullRequests(org, repo, scope, octokit) {
         ) == true ||
         (scope === "week" &&
           moment(new Date()).week() ==
-            moment(Date.parse(response.data[index].created_at)).week()) ||
+            moment(Date.parse(response.data[index].created_at)).week() &&
+          moment(new Date()).year() ==
+            moment(Date.parse(response.data[index].created_at)).year()) ||
         (scope === "lastYear" &&
           moment(new Date())
             .subtract(1, "year")
@@ -147,7 +151,9 @@ async function countPullRequests(org, repo, scope, octokit) {
           ) == true ||
           (scope === "week" &&
             moment(new Date()).week() ==
-              moment(Date.parse(response.data[index].created_at)).week()) ||
+              moment(Date.parse(response.data[index].created_at)).week() &&
+            moment(new Date()).year() ==
+              moment(Date.parse(response.data[index].created_at)).year()) ||
           (scope === "lastYear" &&
             moment(new Date())
               .subtract(1, "year")
@@ -184,7 +190,9 @@ async function countIssues(org, repo, scope, octokit) {
           ) == true ||
           (scope === "week" &&
             moment(new Date()).week() ==
-              moment(Date.parse(response.data[index].created_at)).week()) ||
+              moment(Date.parse(response.data[index].created_at)).week() &&
+            moment(new Date()).year() ==
+              moment(Date.parse(response.data[index].created_at)).year()) ||
           (scope === "lastYear" &&
             moment(new Date())
               .subtract(1, "year")
@@ -203,7 +211,9 @@ async function countIssues(org, repo, scope, octokit) {
             ) == true ||
             (scope === "week" &&
               moment(new Date()).week() ==
-                moment(Date.parse(response.data[index].created_at)).week()) ||
+                moment(Date.parse(response.data[index].created_at)).week() &&
+              moment(new Date()).year() ==
+                moment(Date.parse(response.data[index].created_at)).year()) ||
             (scope === "lastYear" &&
               moment(new Date())
                 .subtract(1, "year")
