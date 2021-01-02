@@ -11,6 +11,7 @@ const repositories = require("../commands/repositories");
 const unreleased = require("../commands/unreleased");
 const released = require("../commands/released");
 const stats = require("../commands/stats");
+const issues = require("../commands/issues");
 
 require("pkginfo")(module);
 const conf = require("rc")("octoglance", {
@@ -150,6 +151,12 @@ vorpal
       octokit,
       callback
     );
+  });
+
+vorpal
+  .command("issues", "List issues in the repositories")
+  .action(function (args, callback) {
+    issues.handle(settings.value("currentOrg", "user"), octokit, callback);
   });
 
 vorpal.history("octoglance");
