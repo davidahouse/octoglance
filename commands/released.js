@@ -47,12 +47,27 @@ async function handle(org, scope, octokit, callback) {
     }
   }
 
-  for (let index = 0; index < releases.length; index++) {
+  const sortedReleases = releases.sort(function (a, b) {
+    if (a.created_at < b.created_at) {
+      return -1;
+    } else if (a.created_at > b.created_at) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+  for (let index = 0; index < sortedReleases.length; index++) {
     console.log(
-      chalk.green(releases[index].org + " / " + releases[index].repo)
+      chalk.green(
+        sortedReleases[index].org + " / " + sortedReleases[index].repo
+      )
     );
-    console.log(chalk.green(releases[index].release));
-    console.log(chalk.yellow(releases[index].body));
+    console.log(
+      chalk.green(
+        sortedReleases[index].release + " " + sortedReleases[index].created_at
+      )
+    );
+    console.log(chalk.yellow(sortedReleases[index].body));
   }
 
   callback();
@@ -81,7 +96,12 @@ async function gatherReleases(org, repo, scope, octokit) {
           moment(new Date())
             .subtract(1, "year")
             .isSame(Date.parse(response.data[index].created_at), "year") ==
-            true)
+            true) ||
+        (scope === "recent" &&
+          moment(new Date()).diff(
+            moment(Date.parse(response.data[index].created_at)),
+            "days"
+          ) <= 10)
       ) {
         found.push({
           org: org,
