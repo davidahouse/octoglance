@@ -13,6 +13,7 @@ const released = require("../commands/released");
 const stats = require("../commands/stats");
 const issues = require("../commands/issues");
 const pullrequests = require("../commands/pullrequests");
+const collaborators = require("../commands/collaborators");
 
 require("pkginfo")(module);
 const conf = require("rc")("octoglance", {
@@ -165,6 +166,17 @@ vorpal
   .action(function (args, callback) {
     pullrequests.handle(
       settings.value("currentOrg", "user"),
+      octokit,
+      callback
+    );
+  });
+
+vorpal
+  .command("collaborators", "List all collaborators in the repositories")
+  .action(function (args, callback) {
+    collaborators.handle(
+      settings.value("currentOrg", "user"),
+      settings.setValue("currentRepo", null),
       octokit,
       callback
     );
