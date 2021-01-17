@@ -1,7 +1,7 @@
 {
   "name": "octoglance",
   "main": "bin/octoglance.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A command line app for interacting with github",
   "license": "MIT",
   "repository": "davidahouse/octoglance",
