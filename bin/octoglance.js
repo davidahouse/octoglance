@@ -2,6 +2,7 @@
 const chalk = require("chalk");
 const figlet = require("figlet");
 const vorpal = require("vorpal")();
+const Minimist = require("minimist");
 const Octokit = require("@octokit/rest");
 const settings = require("settings-store");
 
@@ -50,10 +51,33 @@ if (settings.value("github", "public") === "public") {
   });
 }
 
-console.log(
-  chalk.yellow(figlet.textSync("octoglance", { horizontalLayout: "full" }))
-);
-console.log(chalk.yellow(module.exports.version));
+let argv = process.argv.slice(0);
+let args = Minimist(argv.slice(2));
+let repl = !(args._ && args._.length) && !(args.h || args.help);
+
+if (args.h || args.help) {
+  argv = [].concat.apply(
+    argv.slice(0, 2).concat("help"),
+    argv.slice(2).filter((i) => i[0] !== "-")
+  );
+}
+
+if (repl) {
+  console.log(
+    chalk.yellow(figlet.textSync("octoglance", { horizontalLayout: "full" }))
+  );
+  console.log(chalk.yellow(module.exports.version));
+}
+
+vorpal
+  .catch("[words...]", "Catches incorrect commands")
+  .action(function (args, cb) {
+    this.log(
+      (args.words ? args.words.join(" ") : "<unknown>") +
+        " is not a valid command."
+    );
+    cb();
+  });
 
 // General
 vorpal
@@ -183,4 +207,13 @@ vorpal
   });
 
 vorpal.history("octoglance");
-vorpal.delimiter("octoglance>").show();
+if (repl) {
+  vorpal.delimiter("octoglance>").show();
+} else {
+  vorpal
+    .on("client_command_executed", function () {
+      process.exit(0);
+    })
+    .delimiter("$")
+    .parse(argv.slice(0));
+}
