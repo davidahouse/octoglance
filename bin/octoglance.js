@@ -158,11 +158,15 @@ vorpal
   });
 
 vorpal
-  .command("released [scope]", "List the github releases")
+  .command(
+    "released <scope> [output]",
+    "List the github releases. Scope can be today, week, lastYear or recent"
+  )
   .action(function (args, callback) {
     released.handle(
       settings.value("currentOrg", "user"),
       args.scope,
+      args.output,
       octokit,
       callback
     );
