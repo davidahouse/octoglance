@@ -4,11 +4,12 @@ const moment = require("moment");
 /**
  * organizations command
  * @param {*} org
- * @param {*} octokit
  * @param {*} scope
+ * @param {*} output
+ * @param {*} octokit
  * @param {*} callback
  */
-async function handle(org, scope, octokit, callback) {
+async function handle(org, scope, output, octokit, callback) {
   // Handle personal repos if org is null
   let releases = [];
 
@@ -56,18 +57,33 @@ async function handle(org, scope, octokit, callback) {
       return 0;
     }
   });
-  for (let index = 0; index < sortedReleases.length; index++) {
-    console.log(
-      chalk.green(
-        sortedReleases[index].org + " / " + sortedReleases[index].repo
-      )
-    );
-    console.log(
-      chalk.green(
-        sortedReleases[index].release + " " + sortedReleases[index].created_at
-      )
-    );
-    console.log(chalk.yellow(sortedReleases[index].body));
+
+  if (output == null || output != "json") {
+    for (let index = 0; index < sortedReleases.length; index++) {
+      console.log(
+        chalk.green(
+          sortedReleases[index].org + " / " + sortedReleases[index].repo
+        )
+      );
+      console.log(
+        chalk.green(
+          sortedReleases[index].release + " " + sortedReleases[index].created_at
+        )
+      );
+      console.log(chalk.yellow(sortedReleases[index].body));
+    }
+  } else {
+    const releasesSimple = [];
+    for (let index = 0; index < sortedReleases.length; index++) {
+      releasesSimple.push({
+        owner: sortedReleases[index].org,
+        repo: sortedReleases[index].repo,
+        release: sortedReleases[index].release,
+        created_at: sortedReleases[index].created_at,
+        body: sortedReleases[index].body,
+      });
+    }
+    console.log(JSON.stringify(releasesSimple));
   }
 
   callback();
@@ -101,7 +117,12 @@ async function gatherReleases(org, repo, scope, octokit) {
           moment(new Date()).diff(
             moment(Date.parse(response.data[index].created_at)),
             "days"
-          ) <= 10)
+          ) <= 10) ||
+        (scope === "recent30" &&
+          moment(new Date()).diff(
+            moment(Date.parse(response.data[index].created_at)),
+            "days"
+          ) <= 30)
       ) {
         found.push({
           org: org,
